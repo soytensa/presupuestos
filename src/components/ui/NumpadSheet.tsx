@@ -13,12 +13,22 @@ export function NumpadSheet({ isOpen, value, onClose, onChange, title }: NumpadS
   if (!isOpen) return null;
 
   const handleNumber = (num: string) => {
+    // Usamos el punto internamente para que JavaScript pueda hacer los cálculos
+    const inputNum = num === ',' ? '.' : num;
+
     if (value === '0') {
-      onChange(num === '.' ? '0.' : num);
+      onChange(inputNum === '.' ? '0.' : inputNum);
     } else {
-      // Evitar múltiples puntos decimales
-      if (num === '.' && value.includes('.')) return;
-      onChange(value + num);
+      // Evitar múltiples comas
+      if (inputNum === '.' && value.includes('.')) return;
+      
+      // Límite máximo de 2 decimales
+      if (value.includes('.') && inputNum !== '.') {
+        const decimals = value.split('.')[1];
+        if (decimals && decimals.length >= 2) return;
+      }
+
+      onChange(value + inputNum);
     }
   };
 
@@ -45,7 +55,7 @@ export function NumpadSheet({ isOpen, value, onClose, onChange, title }: NumpadS
           <div className="flex flex-col">
             <span className="text-[10px] text-[#39FF14] font-bold uppercase tracking-widest">{title}</span>
             <div className="flex items-baseline gap-1 mt-1">
-              <span className="text-5xl font-black text-white tracking-tighter">{value}</span>
+              <span className="text-5xl font-black text-white tracking-tighter">{value.replace('.', ',')}</span>
               <span className="text-xl text-zinc-600 font-bold">m</span>
             </div>
           </div>
@@ -63,10 +73,10 @@ export function NumpadSheet({ isOpen, value, onClose, onChange, title }: NumpadS
             </button>
           ))}
           <button
-            onClick={() => handleNumber('.')}
+            onClick={() => handleNumber(',')}
             className="h-16 flex items-center justify-center text-3xl font-black bg-zinc-900/50 border border-zinc-800 rounded-[20px] active:bg-[#39FF14] active:text-black active:scale-95 transition-all text-[#39FF14]"
           >
-            .
+            ,
           </button>
           <button
             onClick={() => handleNumber('0')}

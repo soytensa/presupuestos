@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { PinLogin } from '@/components/auth/PinLogin';
 import { BudgetCard } from '@/components/bento/BudgetCard';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { getProjects, Project } from '@/lib/data/projects';
@@ -10,33 +9,18 @@ import { Plus } from 'lucide-react';
 
 export default function Home() {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  // Nuevo PIN de seguridad
-  const CORRECT_PIN = "4536";
 
   useEffect(() => {
-    if (isAuthenticated) {
-      loadProjects();
-    }
-  }, [isAuthenticated]);
+    loadProjects();
+  }, []);
 
   async function loadProjects() {
     setLoading(true);
     const data = await getProjects();
     setProjects(data);
     setLoading(false);
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <PinLogin 
-        correctPin={CORRECT_PIN} 
-        onSuccess={() => setIsAuthenticated(true)} 
-      />
-    );
   }
 
   return (

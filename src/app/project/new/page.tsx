@@ -116,7 +116,7 @@ export default function NewProjectPage() {
                   <div className="absolute inset-0 bg-[#39FF14]/5"></div>
                   <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest mb-1 z-10">Superficie</span>
                   <div className="flex items-baseline gap-1 z-10">
-                    <span className="text-3xl font-black text-[#39FF14]">{superficie}</span>
+                    <span className="text-3xl font-black text-[#39FF14]">{superficie.replace('.', ',')}</span>
                     <span className="text-xs text-[#39FF14]/70 font-bold">m²</span>
                   </div>
                 </div>
@@ -206,7 +206,7 @@ function MeasurementCard({ label, value, onClick }: { label: string, value: stri
     >
       <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest mb-2">{label}</span>
       <div className="flex items-baseline gap-1">
-        <span className="text-2xl font-bold text-white w-full truncate">{value}</span>
+        <span className="text-2xl font-bold text-white w-full truncate">{value.replace('.', ',')}</span>
         <span className="text-xs text-zinc-500 font-bold">m</span>
       </div>
     </div>
