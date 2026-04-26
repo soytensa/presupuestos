@@ -1,22 +1,67 @@
 @import "tailwindcss";
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
-  --electric-green: #39ff14;
+  /* Google Material 3 Dark Palette */
+  --m3-surface: #1a1c1e;
+  --m3-surface-variant: #42474e;
+  --m3-primary: #d0e4ff; /* Azul pastel Google */
+  --m3-on-primary: #003258;
+  --m3-secondary: #bbc7db;
+  --m3-tertiary: #d7bee4;
+  --m3-outline: #8c9199;
+  --m3-error: #ffb4ab;
+  
+  --radius-m3: 24px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-electric-green: var(--electric-green);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--m3-surface);
+  --color-foreground: #e2e2e6;
+  --color-primary: var(--m3-primary);
+  --color-secondary: var(--m3-secondary);
+  --color-surface: #22252a;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+  color: #e2e2e6;
+  background-color: var(--m3-surface);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* Tarjeta Estilo Google */
+.google-card {
+  background-color: #22252a;
+  border-radius: var(--radius-m3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background-color 0.2s ease;
+}
+
+.google-card:active {
+  background-color: #2d3036;
+}
+
+/* Chip de Estado */
+.chip {
+  padding: 6px 16px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: 1px solid var(--m3-outline);
+}
+
+.chip-active {
+  background-color: var(--m3-primary);
+  color: var(--m3-on-primary);
+  border-color: var(--m3-primary);
+}
+
+/* Botón Google FAB */
+.fab-google {
+  background-color: #d0e4ff;
+  color: #003258;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}

@@ -23,17 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return <div className="min-h-screen bg-black"></div>;
   }
 
-  if (!isAuthenticated) {
-    return (
-      <PinLogin 
-        correctPin={CORRECT_PIN} 
-        onSuccess={() => {
-          sessionStorage.setItem('wilson_auth', 'true');
-          setIsAuthenticated(true);
-        }} 
-      />
-    );
-  }
-
+  // El PIN lo dejamos para el final como pidió el usuario
   return <>{children}</>;
 }
+

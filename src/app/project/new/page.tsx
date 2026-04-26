@@ -2,214 +2,222 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Hammer, Droplets, Zap, Layers, PaintRoller, ChevronRight, Check } from 'lucide-react';
+import { 
+  ArrowLeft, MapPin, Hammer, Droplets, Zap, Layers, PaintRoller, 
+  Check, ChevronRight, Loader2 
+} from 'lucide-react';
+import { createProject } from '@/lib/data/projects';
 import { NumpadSheet } from '@/components/ui/NumpadSheet';
-
-// Tipos de pasos
-type Step = 'info' | 'categories' | 'detail';
 
 export default function NewProjectPage() {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState<Step>('info');
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
   
-  // Estado del proyecto
-  const [projectData, setProjectData] = useState({
-    name: 'Baño Principal',
-    address: 'Calle Mayor',
-    largo: "3.0",
-    ancho: "3.0",
-    alto: "2.5"
+  const [formData, setFormData] = useState({
+    client_name: '',
+    address: '',
+    largo: '',
+    ancho: '',
+    alto: ''
   });
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  
-  // Estado del Numpad
   const [activeNumpad, setActiveNumpad] = useState<'largo' | 'ancho' | 'alto' | null>(null);
+  const [errors, setErrors] = useState<{client_name?: boolean, address?: boolean}>({});
 
-  // Categorías Modulares (Mockup style)
   const categories = [
-    { id: 'demolicion', name: 'Demolición', icon: <Hammer size={18} /> },
-    { id: 'fontaneria', name: 'Fontanería & Baño', icon: <Droplets size={18} /> },
-    { id: 'falso_techo', name: 'Falso Techo (Pladur)', icon: <Layers size={18} /> },
-    { id: 'electricidad', name: 'Electricidad', icon: <Zap size={18} /> },
-    { id: 'alicatados', name: 'Alicatados & Revestimientos', icon: <Layers size={18} /> },
-    { id: 'pintura', name: 'Pintura', icon: <PaintRoller size={18} /> },
+    { id: 'demolicion', name: 'Demolición', icon: <Hammer size={20} /> },
+    { id: 'fontaneria', name: 'Fontanería', icon: <Droplets size={20} /> },
+    { id: 'pladur', name: 'Pladur', icon: <Layers size={20} /> },
+    { id: 'electricidad', name: 'Electricidad', icon: <Zap size={20} /> },
+    { id: 'pintura', name: 'Pintura', icon: <PaintRoller size={20} /> },
   ];
 
-  const handleCategoryToggle = (id: string) => {
+  const handleNext = () => {
+    const newErrors: {client_name?: boolean, address?: boolean} = {};
+    if (!formData.client_name) newErrors.client_name = true;
+    if (!formData.address) newErrors.address = true;
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setStep(2);
+  };
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      const largo = parseFloat(formData.largo) || 0;
+      const ancho = parseFloat(formData.ancho) || 0;
+      const total = largo * ancho * 100;
+
+      await createProject({
+        client_name: formData.client_name,
+        address: formData.address,
+        status: 'Borrador',
+        total_amount: total
+      });
+      router.push('/');
+    } catch (e) {
+      alert('Error al guardar');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleCategory = (id: string) => {
     setSelectedCategories(prev => 
       prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
     );
   };
 
-  const handleNext = () => {
-    if (currentStep === 'info') setCurrentStep('categories');
+  const handleLocation = async () => {
+    if ("geolocation" in navigator) {
+      setFormData(f => ({ ...f, address: 'Buscando...' }));
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const data = await res.json();
+          setFormData(f => ({ ...f, address: data.display_name.split(',')[0] + ', ' + data.display_name.split(',')[1] }));
+          setErrors(e => ({ ...e, address: false }));
+        } catch (e) {
+          setFormData(f => ({ ...f, address: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}` }));
+        }
+      });
+    }
   };
-
-  const handleBack = () => {
-    if (currentStep === 'info') router.push('/');
-    if (currentStep === 'categories') setCurrentStep('info');
-  };
-
-  // Cálculo seguro de superficie
-  const l = parseFloat(projectData.largo) || 0;
-  const a = parseFloat(projectData.ancho) || 0;
-  const superficie = (l * a).toFixed(1);
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center">
+    <div className="min-h-screen bg-[#1a1c1e] text-[#e2e2e6] flex flex-col items-center">
       <div className="w-full max-w-md flex flex-col p-6 pb-32">
         
-        {/* Top Header con botón de volver */}
-        <header className="flex items-center gap-4 mt-2 mb-8">
-          <button onClick={handleBack} className="p-2 -ml-2 rounded-full active:bg-zinc-900 transition-colors">
-            <ArrowLeft size={24} className="text-zinc-400" />
+        {/* Progress Bar */}
+        <div className="w-full h-1 bg-zinc-800 rounded-full mb-8 overflow-hidden">
+          <div 
+            className="h-full bg-primary transition-all duration-500" 
+            style={{ width: `${(step / 2) * 100}%` }}
+          />
+        </div>
+
+        <header className="flex items-center gap-4 mb-10">
+          <button onClick={() => step === 1 ? router.push('/') : setStep(1)} className="p-2 rounded-full active:bg-zinc-800">
+            <ArrowLeft size={24} />
           </button>
-          <div className="flex flex-col">
-            <h1 className="text-xl font-bold tracking-tight text-white">Nuevo Presupuesto</h1>
-            {currentStep === 'categories' && (
-              <p className="text-[10px] text-[#39FF14] uppercase tracking-widest font-bold">
-                {projectData.name} - {projectData.address}
-              </p>
-            )}
-          </div>
+          <h1 className="text-2xl font-bold tracking-tight">
+            {step === 1 ? 'Nuevo Presupuesto' : 'Categorías'}
+          </h1>
         </header>
 
-        {/* CONTENIDO DEL PASO 1: INFO BÁSICA */}
-        {currentStep === 'info' && (
-          <div className="flex flex-col gap-8 animate-in fade-in slide-in-from-right-4 duration-300">
-            
-            {/* Inputs de texto básicos */}
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest px-1">Nombre / Identificador</label>
-                <input 
-                  type="text" 
-                  value={projectData.name}
-                  onChange={e => setProjectData({...projectData, name: e.target.value})}
-                  className="bg-zinc-900/50 border border-zinc-800 rounded-[16px] px-4 py-3 text-sm font-medium focus:outline-none focus:border-[#39FF14]/50 transition-colors"
-                  placeholder="Ej: Baño Principal"
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest px-1">Dirección (Opcional)</label>
-                <input 
-                  type="text" 
-                  value={projectData.address}
-                  onChange={e => setProjectData({...projectData, address: e.target.value})}
-                  className="bg-zinc-900/50 border border-zinc-800 rounded-[16px] px-4 py-3 text-sm font-medium focus:outline-none focus:border-[#39FF14]/50 transition-colors"
-                  placeholder="Ej: Calle Mayor 12"
-                />
-              </div>
-            </div>
-
-            {/* Grid de Medidas (Bento Style) */}
+        {step === 1 ? (
+          <div className="flex flex-col gap-6 animate-in slide-in-from-right duration-300">
             <div className="flex flex-col gap-2">
-              <h3 className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest px-1">Medidas de la Estancia (Metros)</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <MeasurementCard label="Largo" value={projectData.largo} onClick={() => setActiveNumpad('largo')} />
-                <MeasurementCard label="Ancho" value={projectData.ancho} onClick={() => setActiveNumpad('ancho')} />
-                <MeasurementCard label="Alto" value={projectData.alto} onClick={() => setActiveNumpad('alto')} />
-                
-                {/* Superficie Total (Autocalculada) */}
-                <div className="bg-zinc-900 border border-zinc-800 rounded-[20px] p-4 flex flex-col justify-center items-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[#39FF14]/5"></div>
-                  <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest mb-1 z-10">Superficie</span>
-                  <div className="flex items-baseline gap-1 z-10">
-                    <span className="text-3xl font-black text-[#39FF14]">{superficie.replace('.', ',')}</span>
-                    <span className="text-xs text-[#39FF14]/70 font-bold">m²</span>
-                  </div>
-                </div>
+              <span className="text-[10px] text-primary font-bold uppercase ml-4">Información del Cliente</span>
+              <div className={`google-card p-2 flex flex-col ${errors.client_name ? 'border-red-500/50' : ''}`}>
+                <input 
+                  type="text"
+                  placeholder="Añadir nombre (Ej: Baño Wilson)"
+                  value={formData.client_name}
+                  onChange={(e) => setFormData({...formData, client_name: e.target.value})}
+                  className="bg-transparent px-4 py-4 text-lg font-bold text-white outline-none placeholder:text-zinc-600"
+                />
+              </div>
+              {errors.client_name && <span className="text-[10px] text-red-400 font-bold ml-4 animate-pulse uppercase">Campo obligatorio</span>}
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <span className="text-[10px] text-primary font-bold uppercase ml-4">Ubicación de la obra</span>
+              <div className={`google-card p-2 flex items-center ${errors.address ? 'border-red-500/50' : ''}`}>
+                <input 
+                  type="text"
+                  placeholder="Ej: Calle Principal 123"
+                  value={formData.address}
+                  onChange={(e) => setFormData({...formData, address: e.target.value})}
+                  className="bg-transparent flex-1 px-4 py-4 text-sm text-zinc-300 outline-none placeholder:text-zinc-600"
+                />
+                <button onClick={handleLocation} className="p-4 text-primary active:scale-90 transition-all">
+                  <MapPin size={24} />
+                </button>
+              </div>
+              {errors.address && <span className="text-[10px] text-red-400 font-bold ml-4 animate-pulse uppercase">Campo obligatorio</span>}
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <span className="text-[10px] text-primary font-bold uppercase ml-4">Medidas iniciales (m)</span>
+              <div className="grid grid-cols-2 gap-4">
+                <button onClick={() => setActiveNumpad('largo')} className="google-card p-6 flex flex-col items-center">
+                  <span className="text-[9px] text-zinc-500 font-bold uppercase mb-1">Largo</span>
+                  <span className={`text-2xl font-black ${formData.largo ? 'text-white' : 'text-zinc-800'}`}>
+                    {formData.largo ? formData.largo.replace('.', ',') : '0,00'}
+                  </span>
+                </button>
+                <button onClick={() => setActiveNumpad('ancho')} className="google-card p-6 flex flex-col items-center">
+                  <span className="text-[9px] text-zinc-500 font-bold uppercase mb-1">Ancho</span>
+                  <span className={`text-2xl font-black ${formData.ancho ? 'text-white' : 'text-zinc-800'}`}>
+                    {formData.ancho ? formData.ancho.replace('.', ',') : '0,00'}
+                  </span>
+                </button>
               </div>
             </div>
 
-            <button onClick={handleNext} className="mt-4 w-full bg-[#39FF14] text-black font-black uppercase tracking-widest py-4 rounded-[20px] active:scale-[0.98] transition-transform shadow-[0_0_20px_rgba(57,255,20,0.2)]">
-              Siguiente: Añadir Partidas
+            <button 
+              onClick={handleNext}
+              className="mt-10 w-full fab-google py-5 flex justify-center items-center gap-2 active:scale-95 transition-all"
+            >
+              <span className="font-bold uppercase tracking-widest text-sm">Siguiente paso</span>
+              <ChevronRight size={20} />
             </button>
           </div>
-        )}
-
-        {/* CONTENIDO DEL PASO 2: CATEGORÍAS MODULARES */}
-        {currentStep === 'categories' && (
-          <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            
-            <div className="flex flex-col gap-1 px-1">
-               <h3 className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Partidas Modulares</h3>
-               <p className="text-xs text-zinc-400">Selecciona las categorías que se aplicarán al proyecto.</p>
-            </div>
-
+        ) : (
+          <div className="flex flex-col gap-6 animate-in slide-in-from-right duration-300">
+            <span className="text-[10px] text-primary font-bold uppercase ml-4 px-1">Selecciona los servicios</span>
             <div className="flex flex-col gap-3">
-              {categories.map((cat) => {
+              {categories.map(cat => {
                 const isSelected = selectedCategories.includes(cat.id);
                 return (
-                  <div 
+                  <button 
                     key={cat.id}
-                    onClick={() => handleCategoryToggle(cat.id)}
-                    className={`flex items-center justify-between p-4 rounded-[20px] border cursor-pointer active:scale-[0.98] transition-all ${
-                      isSelected 
-                        ? 'bg-zinc-900/80 border-[#39FF14]/50 shadow-[0_0_15px_rgba(57,255,20,0.05)]' 
-                        : 'bg-zinc-900/30 border-zinc-800/50 hover:border-zinc-700'
-                    }`}
+                    onClick={() => toggleCategory(cat.id)}
+                    className={`google-card p-6 flex items-center justify-between transition-all ${isSelected ? 'bg-primary/10 border-primary/30' : ''}`}
                   >
                     <div className="flex items-center gap-4">
-                      <div className={`p-2 rounded-full ${isSelected ? 'bg-[#39FF14]/10 text-[#39FF14]' : 'bg-black text-zinc-500'}`}>
+                      <div className={`p-3 rounded-2xl ${isSelected ? 'bg-primary text-black' : 'bg-zinc-800 text-zinc-500'}`}>
                         {cat.icon}
                       </div>
-                      <span className={`text-sm font-bold ${isSelected ? 'text-white' : 'text-zinc-300'}`}>
-                        {cat.name}
-                      </span>
+                      <span className={`text-lg font-bold ${isSelected ? 'text-white' : 'text-zinc-500'}`}>{cat.name}</span>
                     </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div className={`w-5 h-5 rounded-[6px] border flex items-center justify-center transition-colors ${
-                        isSelected ? 'bg-[#39FF14] border-[#39FF14]' : 'border-zinc-600 bg-transparent'
-                      }`}>
-                        {isSelected && <Check size={14} className="text-black" strokeWidth={4} />}
-                      </div>
-                      <ChevronRight size={18} className="text-zinc-600" />
-                    </div>
-                  </div>
+                    {isSelected && <Check size={24} className="text-primary" strokeWidth={3} />}
+                  </button>
                 );
               })}
             </div>
 
-            <button className="mt-8 w-full bg-zinc-900 border border-zinc-800 text-[#39FF14] font-black uppercase tracking-widest py-4 rounded-[20px] active:scale-[0.98] transition-transform flex justify-center items-center gap-2">
-               <span>Crear y Detallar</span>
-               <ChevronRight size={18} />
+            <button 
+              onClick={handleSave}
+              disabled={loading}
+              className="mt-10 w-full fab-google py-5 flex justify-center items-center gap-2 active:scale-95 transition-all"
+            >
+              {loading ? <Loader2 size={24} className="animate-spin" /> : <>
+                <span className="font-bold uppercase tracking-widest text-sm">Finalizar Presupuesto</span>
+                <Check size={20} strokeWidth={3} />
+              </>}
             </button>
           </div>
         )}
 
       </div>
 
-      {/* MODAL DEL NUMPAD */}
       <NumpadSheet 
         isOpen={activeNumpad !== null}
         title={activeNumpad ? activeNumpad.toUpperCase() : ''}
-        value={activeNumpad ? projectData[activeNumpad] : '0'}
+        value={activeNumpad ? formData[activeNumpad] : '0'}
         onClose={() => setActiveNumpad(null)}
         onChange={(val) => {
-          if (activeNumpad) {
-            setProjectData({ ...projectData, [activeNumpad]: val });
-          }
+          if (activeNumpad) setFormData({ ...formData, [activeNumpad]: val });
         }}
       />
     </div>
   );
 }
-
-function MeasurementCard({ label, value, onClick }: { label: string, value: string, onClick: () => void }) {
-  return (
-    <div 
-      onClick={onClick}
-      className="bg-black border border-zinc-800 rounded-[20px] p-4 flex flex-col justify-between group active:bg-zinc-900 transition-colors cursor-pointer"
-    >
-      <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest mb-2">{label}</span>
-      <div className="flex items-baseline gap-1">
-        <span className="text-2xl font-bold text-white w-full truncate">{value.replace('.', ',')}</span>
-        <span className="text-xs text-zinc-500 font-bold">m</span>
-      </div>
-    </div>
-  );
-}
-
