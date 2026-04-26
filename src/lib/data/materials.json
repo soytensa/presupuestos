@@ -1,0 +1,47 @@
+[
+  {
+    "id": "mat_001",
+    "name": "Falso Techo Pladur",
+    "unit": "m2",
+    "price_official_bccm": 38.50,
+    "price_manual_wilson": 40.96,
+    "category": "Albañilería",
+    "tags": ["Pladur", "Techo"]
+  },
+  {
+    "id": "mat_002",
+    "name": "Punto de Agua",
+    "unit": "ud",
+    "price_official_bccm": 145.00,
+    "price_manual_wilson": 160.00,
+    "category": "Fontanería",
+    "tags": ["Gala", "Instalación"]
+  },
+  {
+    "id": "mat_003",
+    "name": "Protección Zonas Comunes",
+    "unit": "global",
+    "price_official_bccm": 0.00,
+    "price_manual_wilson": 300.00,
+    "category": "Seguridad",
+    "tags": ["Protección", "Obligatorio"]
+  },
+  {
+    "id": "mat_004",
+    "name": "Ayudas de Albañilería (Instalaciones)",
+    "unit": "global",
+    "price_official_bccm": 0.00,
+    "price_manual_wilson": 400.00,
+    "category": "Albañilería",
+    "tags": ["Ayudas", "Rozas"]
+  },
+  {
+    "id": "mat_005",
+    "name": "Adhesivo Kerakoll H40",
+    "unit": "saco",
+    "price_official_bccm": 18.00,
+    "price_manual_wilson": 22.50,
+    "category": "Materiales",
+    "tags": ["Kerakoll", "Pegado"]
+  }
+]
