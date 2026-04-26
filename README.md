@@ -1,32 +1,33 @@
-# Presupuestos Wilson Torrez - Madrid
+# Presupuestos Wilson v0.4.0 (Material Design Edition)
 
-PWA (Progressive Web App) de alto rendimiento diseñada para la gestión de presupuestos de reformas en la Comunidad de Madrid.
+Aplicación PWA de alto rendimiento para la gestión de presupuestos de reformas, optimizada para uso en obra y con una estética basada en **Google Material Design 3**.
 
-## 🚀 Misión
-Revolucionar la gestión de reformas mediante una herramienta técnica, robusta y estéticamente impecable (Estilo Bento Grid OLED).
+## 🚀 Estado Actual
+La aplicación se encuentra en fase **MVP (Producto Mínimo Viable)**. Hemos completado la infraestructura base de datos y la interfaz de usuario de nueva generación.
+
+### Funcionalidades Implementadas:
+- 📊 **Dashboard Bento:** Gestión visual de presupuestos recientes con estados dinámicos.
+- 🛠️ **CRUD Completo:** Creación, edición (Nombre, Dirección, Estado) y borrado de proyectos sincronizado con Supabase.
+- 📏 **Sistema de Medidas:** Numpad personalizado con formato español (uso de `,` para decimales) para Largo, Ancho y Alto.
+- 🌍 **Geolocalización:** Registro automático de la dirección de obra mediante GPS y Nominatim API.
+- 🎨 **Google Design System:** Tema oscuro oficial de Google con variables centralizadas en `globals.css`.
 
 ## 🛠️ Stack Tecnológico
-- **Core:** Next.js 14 + TypeScript
-- **Styling:** Tailwind CSS (Pure OLED Black #000000, Electric Green #39FF14)
-- **Database:** Supabase (PostgreSQL)
-- **Storage:** Supabase Storage (Fotos de obra)
-- **PDF:** @react-pdf/renderer
+- **Frontend:** Next.js 14+ (Turbopack), React, Tailwind CSS 4.
+- **Backend:** Supabase (PostgreSQL + RLS).
+- **Iconos:** Lucide React.
+- **Despliegue:** Vercel.
 
-## 📂 Estructura del Repositorio
-- `/docs`: Documentación técnica y especificaciones.
-- `/data`: Datos oficiales BCCM y referencias de precios reales.
-- `/diseno`: Mockups conceptuales y recursos gráficos.
-- `/src`: Código fuente de la aplicación Next.js.
-- `/supabase`: Migraciones y configuración de la base de datos.
+## 📁 Estructura del Proyecto
+- `/src/app`: Rutas y páginas (Dashboard, Detalle, Formulario).
+- `/src/components`: Componentes UI y Bento Cards.
+- `/src/lib/data`: Capa de datos y lógica de conexión con Supabase.
+- `/src/app/globals.css`: Sistema de diseño centralizado (Variables Material 3).
 
-## 📐 Lógica de Precios
-El sistema utiliza una lógica de 3 capas:
-1. **Referencia BCCM:** Datos oficiales de la Comunidad de Madrid (Áreas 1, 2, 3).
-2. **Override Wilson:** Precios manuales con prioridad máxima.
-3. **Multiplicador Global:** Coeficiente ajustable para inflación o dificultad.
+## 🚀 Próximos Pasos
+1. **Pricing Engine:** Lógica avanzada de cálculo por material (m² de Pladur, botes de pintura, etc.).
+2. **Generación de PDF:** Exportación profesional para envío al cliente.
+3. **Autenticación:** Sistema de bloqueo por PIN para acceso privado.
 
-## 🔒 Acceso
-Protección mediante PIN de 4 dígitos (Wilson Torrez).
-
-## 📄 Licencia
-Privado - Wilson Torrez.
+---
+*Desarrollado con ❤️ por Wilson Torrez & Antigravity AI*
