@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { PinLogin } from '@/components/auth/PinLogin';
 import { BudgetCard } from '@/components/bento/BudgetCard';
 import { BottomNav } from '@/components/layout/BottomNav';
@@ -8,6 +9,7 @@ import { getProjects, Project } from '@/lib/data/projects';
 import { Plus } from 'lucide-react';
 
 export default function Home() {
+  const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -101,7 +103,10 @@ export default function Home() {
       </div>
 
       {/* Floating Action Button (FAB) */}
-      <button className="fixed bottom-28 right-6 w-14 h-14 bg-[#39FF14] text-black rounded-full shadow-[0_0_20px_rgba(57,255,20,0.3)] flex items-center justify-center active:scale-90 active:rotate-90 transition-all z-40">
+      <button 
+        onClick={() => router.push('/project/new')}
+        className="fixed bottom-28 right-6 w-14 h-14 bg-[#39FF14] text-black rounded-full shadow-[0_0_20px_rgba(57,255,20,0.3)] flex items-center justify-center active:scale-90 active:rotate-90 transition-all z-40"
+      >
         <Plus size={32} strokeWidth={3} />
       </button>
 
