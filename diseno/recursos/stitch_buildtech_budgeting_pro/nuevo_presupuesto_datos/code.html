@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nuevo Presupuesto</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#3d2060",
+                        "secondary-fixed-dim": "#88b4cc",
+                        "on-error-container": "#ffb3b3",
+                        "on-secondary-fixed": "#0d1f2b",
+                        "error": "#ff6b6b",
+                        "on-surface-variant": "#a0b4c4",
+                        "secondary": "#88b4cc",
+                        "surface-container-lowest": "#0a0e1a",
+                        "secondary-container": "#1a3a4e",
+                        "primary-fixed-dim": "#7dd3fc",
+                        "primary": "#7dd3fc",
+                        "on-secondary-container": "#c0d8e8",
+                        "error-container": "#3d1414",
+                        "surface-container-low": "#111828",
+                        "on-secondary": "#001f2e",
+                        "primary-fixed": "#c8eaff",
+                        "inverse-on-surface": "#0a0e1a",
+                        "tertiary-fixed-dim": "#c8a0f0",
+                        "on-surface": "#e0e8f0",
+                        "surface-dim": "#0f1524",
+                        "on-primary-fixed-variant": "#004d73",
+                        "on-primary-container": "#c8eaff",
+                        "surface": "#0f1524",
+                        "on-primary": "#001f2e",
+                        "background": "#0a0e1a",
+                        "surface-container-highest": "#202c42",
+                        "on-primary-fixed": "#001f2e",
+                        "surface-bright": "#1a2438",
+                        "on-tertiary-container": "#e8d0ff",
+                        "on-tertiary-fixed-variant": "#4d2a73",
+                        "on-secondary-fixed-variant": "#2a4a5e",
+                        "tertiary-fixed": "#e8d0ff",
+                        "on-error": "#1a0000",
+                        "surface-tint": "#7dd3fc",
+                        "secondary-fixed": "#c0d8e8",
+                        "outline-variant": "#2a3a48",
+                        "inverse-surface": "#e0e8f0",
+                        "primary-container": "#0e4d6e",
+                        "on-background": "#e0e8f0",
+                        "outline": "#4a6070",
+                        "surface-variant": "#1a2438",
+                        "surface-container": "#141c2e",
+                        "on-tertiary-fixed": "#1a002e",
+                        "tertiary": "#c8a0f0",
+                        "inverse-primary": "#0a4c6e",
+                        "surface-container-high": "#1a2438",
+                        "on-tertiary": "#1a002e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter", "sans-serif"],
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col antialiased selection:bg-primary/30 selection:text-primary">
+<!-- Header (No nav shell needed for task flow, just local header) -->
+<header class="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-lg border-b border-sky-300/10 shadow-[0_8px_32px_0_rgba(10,14,26,0.5)] px-4 py-3 flex items-center justify-between">
+<button class="text-sky-300 hover:bg-sky-300/10 p-2 rounded-full active:scale-95 transition-transform duration-200 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline font-semibold tracking-tight text-lg text-on-surface">Nuevo Presupuesto</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Progress Bar -->
+<div class="fixed top-[60px] w-full z-40 bg-surface-container-highest/30 h-1">
+<div class="bg-primary h-full w-1/4 shadow-[0_0_10px_rgba(125,211,252,0.5)]"></div>
+</div>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[84px] pb-24 px-4 flex flex-col gap-6 max-w-md mx-auto w-full">
+<!-- Client Info Section -->
+<section class="flex flex-col gap-3">
+<h2 class="text-xs font-semibold text-primary tracking-wider uppercase ml-1">Información del Cliente</h2>
+<div class="bg-surface-dim/60 backdrop-blur-[16px] border border-primary/10 rounded-xl p-1 shadow-[0_0_30px_rgba(125,211,252,0.02)]">
+<div class="relative flex items-center px-3 py-2">
+<span class="material-symbols-outlined text-on-surface-variant mr-3" style="font-variation-settings: 'FILL' 0;">person</span>
+<input class="w-full bg-transparent border-none text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0 p-0 text-base" placeholder="Nombre completo" type="text"/>
+</div>
+</div>
+</section>
+<!-- Location Section -->
+<section class="flex flex-col gap-3">
+<h2 class="text-xs font-semibold text-primary tracking-wider uppercase ml-1">Ubicación de la Obra</h2>
+<div class="bg-surface-dim/60 backdrop-blur-[16px] border border-primary/10 rounded-xl p-1 shadow-[0_0_30px_rgba(125,211,252,0.02)]">
+<div class="relative flex items-center px-3 py-2">
+<span class="material-symbols-outlined text-on-surface-variant mr-3" style="font-variation-settings: 'FILL' 0;">location_on</span>
+<input class="w-full bg-transparent border-none text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0 p-0 text-base" placeholder="Dirección del proyecto" type="text"/>
+<button class="text-primary ml-2 p-1 hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 0;">my_location</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Initial Measurements Section -->
+<section class="flex flex-col gap-3 mt-2">
+<h2 class="text-xs font-semibold text-primary tracking-wider uppercase ml-1">Medidas Iniciales (M)</h2>
+<div class="grid grid-cols-2 gap-4">
+<!-- Largo -->
+<div class="bg-surface-dim/60 backdrop-blur-[16px] border border-primary/10 rounded-xl p-4 flex flex-col items-center justify-center gap-2 shadow-[0_0_30px_rgba(125,211,252,0.02)] focus-within:border-primary/30 focus-within:shadow-[0_0_20px_rgba(125,211,252,0.1)] transition-all">
+<label class="text-xs text-on-surface-variant uppercase tracking-wide">Largo</label>
+<div class="flex items-end gap-1">
+<input class="w-20 bg-transparent border-none text-center text-2xl font-semibold text-on-surface p-0 focus:ring-0 placeholder:text-on-surface-variant/30" placeholder="0,00" step="0.01" type="number"/>
+<span class="text-on-surface-variant text-sm mb-1">m</span>
+</div>
+</div>
+<!-- Ancho -->
+<div class="bg-surface-dim/60 backdrop-blur-[16px] border border-primary/10 rounded-xl p-4 flex flex-col items-center justify-center gap-2 shadow-[0_0_30px_rgba(125,211,252,0.02)] focus-within:border-primary/30 focus-within:shadow-[0_0_20px_rgba(125,211,252,0.1)] transition-all">
+<label class="text-xs text-on-surface-variant uppercase tracking-wide">Ancho</label>
+<div class="flex items-end gap-1">
+<input class="w-20 bg-transparent border-none text-center text-2xl font-semibold text-on-surface p-0 focus:ring-0 placeholder:text-on-surface-variant/30" placeholder="0,00" step="0.01" type="number"/>
+<span class="text-on-surface-variant text-sm mb-1">m</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full p-4 bg-background/80 backdrop-blur-xl border-t border-primary/5 z-40 pb-safe">
+<div class="max-w-md mx-auto">
+<button class="w-full bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-[0_0_20px_rgba(125,211,252,0.1)]">
+<span>SIGUIENTE PASO</span>
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 0;">chevron_right</span>
+</button>
+</div>
+</div>
+</body></html>

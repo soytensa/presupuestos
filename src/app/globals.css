@@ -1,67 +1,106 @@
 @import "tailwindcss";
 
 :root {
-  /* Google Material 3 Dark Palette */
-  --m3-surface: #1a1c1e;
-  --m3-surface-variant: #42474e;
-  --m3-primary: #d0e4ff; /* Azul pastel Google */
-  --m3-on-primary: #003258;
-  --m3-secondary: #bbc7db;
-  --m3-tertiary: #d7bee4;
-  --m3-outline: #8c9199;
-  --m3-error: #ffb4ab;
+  /* Exact Stitch Colors */
+  --bg-color: #0a0e1a;
+  --surface: #0f1524;
+  --surface-variant: #1a2438;
+  --surface-container-high: #1a2438;
   
-  --radius-m3: 24px;
+  --primary: #7dd3fc;
+  --on-primary: #001f2e;
+  
+  --tertiary: #c8a0f0;
+  
+  --on-surface: #e0e8f0;
+  --on-surface-variant: #a0b4c4;
+  --outline: #4a6070;
+  --outline-variant: #2a3a48;
 }
 
 @theme inline {
-  --color-background: var(--m3-surface);
-  --color-foreground: #e2e2e6;
-  --color-primary: var(--m3-primary);
-  --color-secondary: var(--m3-secondary);
-  --color-surface: #22252a;
+  --color-background: var(--bg-color);
+  --color-surface: var(--surface);
+  --color-surface-variant: var(--surface-variant);
+  --color-primary: var(--primary);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-tertiary: var(--tertiary);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
 }
 
 body {
-  color: #e2e2e6;
-  background-color: var(--m3-surface);
+  background-color: var(--bg-color);
+  color: var(--on-surface);
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Tarjeta Estilo Google */
-.google-card {
-  background-color: #22252a;
-  border-radius: var(--radius-m3);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: background-color 0.2s ease;
+/* Exact Stitch Card Pattern */
+.glacier-card {
+  background-color: rgba(15, 21, 36, 0.6); /* surface/60 */
+  backdrop-filter: blur(24px); /* backdrop-blur-xl */
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(125, 211, 252, 0.1); /* primary/10 */
+  border-radius: 30px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -4px rgba(0, 0, 0, 0.2); /* shadow-lg shadow-black/20 */
+  transition: all 0.3s ease;
 }
 
-.google-card:active {
-  background-color: #2d3036;
+.glacier-card:hover {
+  background-color: rgba(15, 21, 36, 0.75); /* surface/75 */
 }
 
-/* Chip de Estado */
-.chip {
-  padding: 6px 16px;
-  border-radius: 12px;
-  font-size: 11px;
+/* Exact Stitch Button (Dark slate with blue text or reversed) */
+.glacier-btn {
+  background-color: var(--surface-variant);
+  color: var(--primary);
+  border-radius: 20px;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.glacier-btn:active, .glacier-btn:hover {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.glacier-input {
+  background-color: var(--surface);
+  border: 1px solid var(--outline-variant);
+  border-radius: 16px;
+  transition: all 0.2s ease;
+  color: var(--on-surface);
+}
+
+.glacier-input:focus {
+  outline: none;
+  border-color: rgba(125, 211, 252, 0.3);
+}
+
+.chip {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  border: 1px solid var(--m3-outline);
+  background-color: var(--surface-variant);
+  color: var(--on-surface-variant);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .chip-active {
-  background-color: var(--m3-primary);
-  color: var(--m3-on-primary);
-  border-color: var(--m3-primary);
+  background-color: rgba(125, 211, 252, 0.1); /* primary/10 */
+  color: var(--primary);
+  border-color: rgba(125, 211, 252, 0.2); /* primary/20 */
 }
 
-/* Botón Google FAB */
-.fab-google {
-  background-color: #d0e4ff;
-  color: #003258;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+/* Dashboard App Bar Pattern */
+.top-app-bar {
+  background-color: rgba(15, 21, 36, 0.6);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(125, 211, 252, 0.1);
+  box-shadow: 0 0 30px rgba(125, 211, 252, 0.05);
 }

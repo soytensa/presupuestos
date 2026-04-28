@@ -91,122 +91,160 @@ export default function NewProjectPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#1a1c1e] text-[#e2e2e6] flex flex-col items-center">
-      <div className="w-full max-w-md flex flex-col p-6 pb-32">
+    <div className="min-h-screen pb-24 flex flex-col items-center">
+      
+      {/* Header */}
+      <header className="fixed top-0 w-full z-50 bg-[#0a0e1a]/60 backdrop-blur-lg border-b border-primary/10 shadow-[0_8px_32px_0_rgba(10,14,26,0.5)] px-4 py-3 flex items-center justify-between">
+        <button onClick={() => step === 1 ? router.push('/') : setStep(1)} className="text-primary hover:bg-primary/10 p-2 rounded-full active:scale-95 transition-transform duration-200 flex items-center justify-center">
+          <ArrowLeft size={24} />
+        </button>
+        <h1 className="font-semibold tracking-tight text-lg text-white">
+          {step === 1 ? 'Nuevo Presupuesto' : 'Categorías'}
+        </h1>
+        <div className="w-10"></div> {/* Spacer for centering */}
+      </header>
+
+      {/* Progress Bar */}
+      <div className="fixed top-[60px] w-full z-40 bg-surface-variant h-1">
+        <div 
+          className="bg-primary h-full transition-all duration-500 shadow-[0_0_10px_rgba(125,211,252,0.5)]" 
+          style={{ width: `${(step / 2) * 100}%` }}
+        ></div>
+      </div>
+
+      <div className="w-full max-w-md flex flex-col p-4 pt-[84px] pb-32">
         
-        {/* Progress Bar */}
-        <div className="w-full h-1 bg-zinc-800 rounded-full mb-8 overflow-hidden">
-          <div 
-            className="h-full bg-primary transition-all duration-500" 
-            style={{ width: `${(step / 2) * 100}%` }}
-          />
-        </div>
-
-        <header className="flex items-center gap-4 mb-10">
-          <button onClick={() => step === 1 ? router.push('/') : setStep(1)} className="p-2 rounded-full active:bg-zinc-800">
-            <ArrowLeft size={24} />
-          </button>
-          <h1 className="text-2xl font-bold tracking-tight">
-            {step === 1 ? 'Nuevo Presupuesto' : 'Categorías'}
-          </h1>
-        </header>
-
         {step === 1 ? (
           <div className="flex flex-col gap-6 animate-in slide-in-from-right duration-300">
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] text-primary font-bold uppercase ml-4">Información del Cliente</span>
-              <div className={`google-card p-2 flex flex-col ${errors.client_name ? 'border-red-500/50' : ''}`}>
-                <input 
-                  type="text"
-                  placeholder="Añadir nombre (Ej: Baño Wilson)"
-                  value={formData.client_name}
-                  onChange={(e) => setFormData({...formData, client_name: e.target.value})}
-                  className="bg-transparent px-4 py-4 text-lg font-bold text-white outline-none placeholder:text-zinc-600"
-                />
+            {/* Client Info Section */}
+            <section className="flex flex-col gap-3">
+              <h2 className="text-xs font-semibold text-primary tracking-wider uppercase ml-1">Información del Cliente</h2>
+              <div className={`bg-surface/60 backdrop-blur-[16px] border ${errors.client_name ? 'border-red-500/50' : 'border-primary/10'} rounded-xl p-1 shadow-[0_0_30px_rgba(125,211,252,0.02)]`}>
+                <div className="relative flex items-center px-3 py-2">
+                  <div className="text-surface-variant mr-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  </div>
+                  <input 
+                    type="text"
+                    placeholder="Nombre completo"
+                    value={formData.client_name}
+                    onChange={(e) => setFormData({...formData, client_name: e.target.value})}
+                    className="w-full bg-transparent border-none text-white placeholder:text-surface-variant focus:outline-none p-0 text-base"
+                  />
+                </div>
               </div>
-              {errors.client_name && <span className="text-[10px] text-red-400 font-bold ml-4 animate-pulse uppercase">Campo obligatorio</span>}
-            </div>
+              {errors.client_name && <span className="text-[10px] text-red-400 font-bold ml-1 uppercase">Campo obligatorio</span>}
+            </section>
 
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] text-primary font-bold uppercase ml-4">Ubicación de la obra</span>
-              <div className={`google-card p-2 flex items-center ${errors.address ? 'border-red-500/50' : ''}`}>
-                <input 
-                  type="text"
-                  placeholder="Ej: Calle Principal 123"
-                  value={formData.address}
-                  onChange={(e) => setFormData({...formData, address: e.target.value})}
-                  className="bg-transparent flex-1 px-4 py-4 text-sm text-zinc-300 outline-none placeholder:text-zinc-600"
-                />
-                <button onClick={handleLocation} className="p-4 text-primary active:scale-90 transition-all">
-                  <MapPin size={24} />
-                </button>
+            {/* Location Section */}
+            <section className="flex flex-col gap-3">
+              <h2 className="text-xs font-semibold text-primary tracking-wider uppercase ml-1">Ubicación de la obra</h2>
+              <div className={`bg-surface/60 backdrop-blur-[16px] border ${errors.address ? 'border-red-500/50' : 'border-primary/10'} rounded-xl p-1 shadow-[0_0_30px_rgba(125,211,252,0.02)]`}>
+                <div className="relative flex items-center px-3 py-2">
+                  <div className="text-surface-variant mr-3">
+                    <MapPin size={24} />
+                  </div>
+                  <input 
+                    type="text"
+                    placeholder="Dirección del proyecto"
+                    value={formData.address}
+                    onChange={(e) => setFormData({...formData, address: e.target.value})}
+                    className="w-full bg-transparent border-none text-white placeholder:text-surface-variant focus:outline-none p-0 text-base"
+                  />
+                  <button onClick={handleLocation} className="text-primary ml-2 p-1 hover:bg-primary/10 rounded-full transition-colors">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
               </div>
-              {errors.address && <span className="text-[10px] text-red-400 font-bold ml-4 animate-pulse uppercase">Campo obligatorio</span>}
-            </div>
+              {errors.address && <span className="text-[10px] text-red-400 font-bold ml-1 uppercase">Campo obligatorio</span>}
+            </section>
 
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] text-primary font-bold uppercase ml-4">Medidas iniciales (m)</span>
+            {/* Measurements */}
+            <section className="flex flex-col gap-3 mt-2">
+              <h2 className="text-xs font-semibold text-primary tracking-wider uppercase ml-1">Medidas iniciales (m)</h2>
               <div className="grid grid-cols-2 gap-4">
-                <button onClick={() => setActiveNumpad('largo')} className="google-card p-6 flex flex-col items-center">
-                  <span className="text-[9px] text-zinc-500 font-bold uppercase mb-1">Largo</span>
-                  <span className={`text-2xl font-black ${formData.largo ? 'text-white' : 'text-zinc-800'}`}>
-                    {formData.largo ? formData.largo.replace('.', ',') : '0,00'}
-                  </span>
+                <button onClick={() => setActiveNumpad('largo')} className="bg-surface/60 backdrop-blur-[16px] border border-primary/10 rounded-xl p-4 flex flex-col items-center justify-center gap-2 shadow-[0_0_30px_rgba(125,211,252,0.02)] transition-all">
+                  <span className="text-xs text-surface-variant uppercase tracking-wide">Largo</span>
+                  <div className="flex items-end gap-1">
+                    <span className={`text-2xl font-semibold ${formData.largo ? 'text-white' : 'text-surface-variant'}`}>
+                      {formData.largo ? formData.largo.replace('.', ',') : '0,00'}
+                    </span>
+                    <span className="text-surface-variant text-sm mb-1">m</span>
+                  </div>
                 </button>
-                <button onClick={() => setActiveNumpad('ancho')} className="google-card p-6 flex flex-col items-center">
-                  <span className="text-[9px] text-zinc-500 font-bold uppercase mb-1">Ancho</span>
-                  <span className={`text-2xl font-black ${formData.ancho ? 'text-white' : 'text-zinc-800'}`}>
-                    {formData.ancho ? formData.ancho.replace('.', ',') : '0,00'}
-                  </span>
+                <button onClick={() => setActiveNumpad('ancho')} className="bg-surface/60 backdrop-blur-[16px] border border-primary/10 rounded-xl p-4 flex flex-col items-center justify-center gap-2 shadow-[0_0_30px_rgba(125,211,252,0.02)] transition-all">
+                  <span className="text-xs text-surface-variant uppercase tracking-wide">Ancho</span>
+                  <div className="flex items-end gap-1">
+                    <span className={`text-2xl font-semibold ${formData.ancho ? 'text-white' : 'text-surface-variant'}`}>
+                      {formData.ancho ? formData.ancho.replace('.', ',') : '0,00'}
+                    </span>
+                    <span className="text-surface-variant text-sm mb-1">m</span>
+                  </div>
                 </button>
               </div>
-            </div>
-
-            <button 
-              onClick={handleNext}
-              className="mt-10 w-full fab-google py-5 flex justify-center items-center gap-2 active:scale-95 transition-all"
-            >
-              <span className="font-bold uppercase tracking-widest text-sm">Siguiente paso</span>
-              <ChevronRight size={20} />
-            </button>
+            </section>
           </div>
         ) : (
           <div className="flex flex-col gap-6 animate-in slide-in-from-right duration-300">
-            <span className="text-[10px] text-primary font-bold uppercase ml-4 px-1">Selecciona los servicios</span>
-            <div className="flex flex-col gap-3">
-              {categories.map(cat => {
-                const isSelected = selectedCategories.includes(cat.id);
-                return (
-                  <button 
-                    key={cat.id}
-                    onClick={() => toggleCategory(cat.id)}
-                    className={`google-card p-6 flex items-center justify-between transition-all ${isSelected ? 'bg-primary/10 border-primary/30' : ''}`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`p-3 rounded-2xl ${isSelected ? 'bg-primary text-black' : 'bg-zinc-800 text-zinc-500'}`}>
-                        {cat.icon}
+            <section className="flex flex-col gap-3">
+              <h2 className="text-xs font-semibold text-primary tracking-wider uppercase ml-1">Selecciona los servicios</h2>
+              <h1 className="text-3xl font-bold text-white mb-4">¿Qué necesitas<br/>para tu proyecto?</h1>
+              
+              <div className="flex flex-col gap-3">
+                {categories.map(cat => {
+                  const isSelected = selectedCategories.includes(cat.id);
+                  return (
+                    <button 
+                      key={cat.id}
+                      onClick={() => toggleCategory(cat.id)}
+                      className={`bg-surface/60 backdrop-blur-[16px] border rounded-2xl p-4 flex items-center justify-between transition-all ${isSelected ? 'border-primary shadow-[0_0_15px_rgba(125,211,252,0.1)]' : 'border-primary/10'}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-surface-variant flex items-center justify-center text-primary">
+                          {cat.icon}
+                        </div>
+                        <div className="flex flex-col items-start">
+                          <span className="text-white font-semibold">{cat.name}</span>
+                          <span className="text-surface-variant text-xs">{cat.name === 'Demolición' ? 'Derribos y limpieza' : cat.name === 'Fontanería' ? 'Tuberías y sanitarios' : cat.name === 'Pladur' ? 'Techos y tabiques' : cat.name === 'Electricidad' ? 'Cableado y enchufes' : 'Interiores y exteriores'}</span>
+                        </div>
                       </div>
-                      <span className={`text-lg font-bold ${isSelected ? 'text-white' : 'text-zinc-500'}`}>{cat.name}</span>
-                    </div>
-                    {isSelected && <Check size={24} className="text-primary" strokeWidth={3} />}
-                  </button>
-                );
-              })}
-            </div>
-
-            <button 
-              onClick={handleSave}
-              disabled={loading}
-              className="mt-10 w-full fab-google py-5 flex justify-center items-center gap-2 active:scale-95 transition-all"
-            >
-              {loading ? <Loader2 size={24} className="animate-spin" /> : <>
-                <span className="font-bold uppercase tracking-widest text-sm">Finalizar Presupuesto</span>
-                <Check size={20} strokeWidth={3} />
-              </>}
-            </button>
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${isSelected ? 'bg-primary border-primary text-black' : 'border-surface-variant'}`}>
+                        {isSelected && <Check size={14} strokeWidth={4} />}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
           </div>
         )}
 
+      </div>
+
+      {/* Bottom Action Area */}
+      <div className="fixed bottom-0 left-0 w-full p-4 bg-[#0a0e1a]/80 backdrop-blur-xl border-t border-primary/5 z-40 pb-safe">
+        <div className="max-w-md mx-auto">
+          {step === 1 ? (
+            <button 
+              onClick={handleNext}
+              className="w-full bg-surface-variant hover:bg-surface-variant/80 text-primary font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+            >
+              <span>SIGUIENTE PASO</span>
+              <ChevronRight size={20} />
+            </button>
+          ) : (
+            <button 
+              onClick={handleSave}
+              disabled={loading}
+              className="w-full bg-surface-variant hover:bg-surface-variant/80 text-primary font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+            >
+              {loading ? <Loader2 size={24} className="animate-spin" /> : <>
+                <span>FINALIZAR PRESUPUESTO</span>
+                <Check size={20} />
+              </>}
+            </button>
+          )}
+        </div>
       </div>
 
       <NumpadSheet 
