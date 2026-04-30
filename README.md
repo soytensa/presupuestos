@@ -30,4 +30,4 @@ La aplicación se encuentra en fase **MVP (Producto Mínimo Viable)**. Hemos com
 3. **Autenticación:** Sistema de bloqueo por PIN para acceso privado.
 
 ---
-*Desarrollado con ❤️ por Wilson Torrez & Antigravity AI*
+*Desarrollado con ❤️ por Wesly Alfred & Antigravity AI*
