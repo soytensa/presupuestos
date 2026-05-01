@@ -10,24 +10,38 @@ import { Plus } from 'lucide-react';
  * Estética Bento OLED.
  */
 
+type MaterialItem = {
+  id: string;
+  name: string;
+  unit: string;
+  category: string;
+  price_official_bccm: number;
+  price_manual_wilson: number;
+  tags: string[];
+};
+
 interface MaterialSelectorProps {
-  onAdd: (material: any) => void;
+  onAdd: (material: MaterialItem) => void;
 }
 
 export function MaterialSelector({ onAdd }: MaterialSelectorProps) {
+  const materials = materialsData as MaterialItem[];
+
   return (
     <div className="bg-gray-900/30 border border-gray-800 rounded-[30px] p-6">
       <h4 className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-4">Añadir Partida</h4>
       <div className="grid grid-cols-1 gap-3">
-        {materialsData.map((mat) => (
-          <div 
+        {materials.map((mat) => (
+          <div
             key={mat.id}
             onClick={() => onAdd(mat)}
             className="flex justify-between items-center bg-black/40 border border-gray-800/50 p-4 rounded-[24px] active:scale-95 transition-all cursor-pointer group hover:border-[#39FF14]/30"
           >
             <div>
               <p className="text-sm font-bold text-gray-200 group-hover:text-white">{mat.name}</p>
-              <p className="text-[9px] text-gray-600 uppercase font-bold">{mat.category} · {mat.unit}</p>
+              <p className="text-[9px] text-gray-600 uppercase font-bold">
+                {mat.category} · {mat.unit}
+              </p>
             </div>
             <div className="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-[#39FF14] group-hover:bg-[#39FF14] group-hover:text-black transition-colors">
               <Plus size={18} />

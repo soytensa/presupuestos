@@ -1,129 +1,124 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Plus } from 'lucide-react';
+import { Bell, Filter } from 'lucide-react';
 import { BudgetCard } from '@/components/bento/BudgetCard';
+import { BottomNav } from '@/components/layout/BottomNav';
 import { getProjects, Project } from '@/lib/data/projects';
 
+const avatarUrl =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuB8GmQw7yB52jOvAFE0rt22dhafTuzePVmoA2wJG5L_rx7y6PE0a4W9dTYrb9TmUP8joIdlnlLVwYA3HKLXG8t5n7E64xeg4t_so1_DZg-FA-4pfJOEKvty705oKEWowVZ5CXSkXXpDDgQjDfzq-KlFjGE4YW3XJhOmbcSkP30Ei0QO1XHOtpVxQkWO-541L4PGMVm2ts-aaW15ZO6kWKOWhu8r0gpfFD7_YXzAaBslk-YW85TkLdqvj6NkIUCS9PPGmSV48GBohOQW';
+
 export default function Home() {
-  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function loadProjects() {
-    setLoading(true);
-    const data = await getProjects();
-    setProjects(data);
-    setLoading(false);
-  }
-
   useEffect(() => {
-    loadProjects();
+    let isActive = true;
+
+    (async () => {
+      const data = await getProjects();
+      if (!isActive) return;
+      setProjects(data);
+      setLoading(false);
+    })();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   return (
     <div className="min-h-screen pb-24">
-      {/* TopAppBar */}
-      <header className="fixed top-0 w-full z-50 flex items-center justify-between px-6 h-16 top-app-bar">
-        <div className="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-primary/20 flex items-center justify-center">
-          <span className="text-primary text-xs font-bold">WT</span>
-        </div>
-        <div className="text-xl font-black text-primary tracking-tighter">
-          Glacier Build
-        </div>
-        <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 active:scale-95 transition-all text-primary">
-          <span className="material-symbols-outlined">notifications</span>
-        </button>
-      </header>
-
-      <main className="pt-24 px-5 max-w-2xl mx-auto flex flex-col pb-10">
-        
-        {/* Page Header */}
-        <div className="mb-10 flex justify-between items-end">
-          <div className="flex flex-col">
-            <p className="text-on-surface-variant text-sm font-medium tracking-wide mb-1">Wilson Torrez</p>
-            <h1 className="text-4xl sm:text-5xl font-bold text-on-surface tracking-tight">Presupuestos</h1>
+      <header className="fixed top-0 w-full z-50 flex items-center justify-between px-4 h-16 backdrop-blur-xl border-b border-sky-300/10 bg-[#0f1524]/60">
+        <div className="flex items-center gap-2 flex-1 basis-0">
+          <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high border border-primary/20 shrink-0">
+            <img alt="Foto de perfil" className="w-full h-full object-cover" src={avatarUrl} />
           </div>
-          <button 
-            onClick={loadProjects}
-            className="text-xs text-primary font-medium hover:text-primary/80 transition-colors mb-2"
+          <span className="text-[10px] text-on-surface-variant font-medium uppercase tracking-tight hidden sm:block truncate">
+            Hola, Wilson
+          </span>
+        </div>
+
+        <div className="flex justify-center">
+          <span className="text-sm font-black text-sky-300 tracking-[0.2em] uppercase whitespace-nowrap">
+            Presupuestos
+          </span>
+        </div>
+
+        <div className="flex justify-end flex-1 basis-0">
+          <button
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors text-sky-300"
+            type="button"
           >
-            Actualizar
+            <Bell size={24} strokeWidth={2.25} />
           </button>
         </div>
+      </header>
 
-        {/* Lista de Proyectos */}
-        <section className="flex flex-col">
-          <div className="flex justify-between items-center mb-5">
-            <h2 className="text-xs font-semibold tracking-[0.2em] uppercase text-on-surface-variant/80">Recientes</h2>
-            <button className="text-primary text-sm font-medium hover:text-primary/80 transition-colors">Ver todos</button>
+      <main className="pt-24 px-5 max-w-2xl mx-auto">
+        <section>
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-xs font-semibold tracking-[0.2em] uppercase text-on-surface-variant/80">
+              Recientes
+            </h2>
+            <div className="flex items-center gap-1">
+              <button
+                className="text-primary text-sm font-medium hover:text-primary-fixed transition-colors"
+                type="button"
+              >
+                Ver todos
+              </button>
+              <button
+                onClick={async () => {
+                  setLoading(true);
+                  const data = await getProjects();
+                  setProjects(data);
+                  setLoading(false);
+                }}
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors text-primary"
+                type="button"
+                aria-label="Filtrar"
+              >
+                <Filter size={18} />
+              </button>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-6">
+          <div className="space-y-4">
             {loading ? (
-              <div className="flex flex-col gap-6">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="w-full h-44 glacier-card animate-pulse"></div>
+              <>
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="bg-surface-container/40 backdrop-blur-md border border-sky-300/15 rounded-[30px] p-6 shadow-lg animate-pulse h-52"
+                  />
                 ))}
-              </div>
+              </>
             ) : projects.length > 0 ? (
               projects.map((proj) => (
-                <BudgetCard 
+                <BudgetCard
                   key={proj.id}
                   id={proj.id}
                   client={proj.client_name}
                   address={proj.address}
                   total={proj.total_amount}
                   status={proj.status}
+                  createdAt={proj.created_at}
                 />
               ))
             ) : (
-              <div className="flex flex-col items-center justify-center py-24 text-center glacier-card border-dashed">
-                <p className="text-surface-variant font-medium mb-6 text-sm px-10">No hay presupuestos todavía. Empieza creando el primero.</p>
-                <button 
-                  onClick={() => router.push('/project/new')}
-                  className="glacier-btn px-6 py-3 uppercase tracking-widest text-xs"
-                >
-                  Nuevo Presupuesto
-                </button>
+              <div className="bg-surface-container/40 backdrop-blur-md border border-sky-300/15 rounded-[30px] p-6 shadow-lg">
+                <p className="text-on-surface-variant text-sm">
+                  No hay presupuestos todavía. Crea el primero desde el botón <span className="text-primary">Nuevo</span>.
+                </p>
               </div>
             )}
           </div>
         </section>
       </main>
 
-      {/* FAB */}
-      <button 
-        onClick={() => router.push('/project/new')}
-        className="fixed bottom-24 right-6 w-16 h-16 bg-on-surface text-background rounded-full flex items-center justify-center shadow-[0_8px_30px_rgba(224,232,240,0.2)] hover:scale-105 active:scale-95 transition-all duration-200 z-40"
-      >
-        <span className="material-symbols-outlined text-3xl font-bold">add</span>
-      </button>
-
-      {/* BottomNavBar */}
-      <nav className="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe top-app-bar rounded-t-3xl border-t border-primary/15 shadow-2xl">
-        <a className="flex flex-col items-center justify-center text-outline hover:text-primary transition-all active:scale-90 duration-200 w-16" href="#">
-          <span className="material-symbols-outlined mb-1">grid_view</span>
-          <span className="font-inter text-[10px] font-medium uppercase tracking-widest">Home</span>
-        </a>
-        <a className="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-xl px-3 py-1.5 w-20 active:scale-90 duration-200" href="#">
-          <span className="material-symbols-outlined mb-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>construction</span>
-          <span className="font-inter text-[10px] font-bold uppercase tracking-widest text-primary">Projects</span>
-        </a>
-        <a className="flex flex-col items-center justify-center text-outline hover:text-primary transition-all active:scale-90 duration-200 w-16" onClick={() => router.push('/project/new')}>
-          <span className="material-symbols-outlined mb-1">add_circle</span>
-          <span className="font-inter text-[10px] font-medium uppercase tracking-widest">Add</span>
-        </a>
-        <a className="flex flex-col items-center justify-center text-outline hover:text-primary transition-all active:scale-90 duration-200 w-16" href="#">
-          <span className="material-symbols-outlined mb-1">calendar_today</span>
-          <span className="font-inter text-[10px] font-medium uppercase tracking-widest">Schedule</span>
-        </a>
-        <a className="flex flex-col items-center justify-center text-outline hover:text-primary transition-all active:scale-90 duration-200 w-16" href="#">
-          <span className="material-symbols-outlined mb-1">person</span>
-          <span className="font-inter text-[10px] font-medium uppercase tracking-widest">Profile</span>
-        </a>
-      </nav>
+      <BottomNav />
     </div>
   );
 }

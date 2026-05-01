@@ -3,9 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { 
-  ArrowLeft, Trash2, Edit3, MapPin, 
-  Layers, Hammer, Droplets, Zap, PaintRoller,
-  X, Save, Loader2, Check, ChevronRight
+  ArrowLeft, Trash2, Edit3, MapPin,
+  Layers, Hammer, Zap, PaintRoller,
+  X, Save, Loader2, ChevronRight
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { Project, deleteProject, updateProject } from '@/lib/data/projects';
@@ -64,8 +64,9 @@ export default function ProjectDetailPage() {
     try {
       await deleteProject(id);
       router.push('/');
-    } catch (e: any) {
-      alert('Error: ' + e.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Error desconocido';
+      alert('Error: ' + message);
     }
   };
 
@@ -221,7 +222,7 @@ export default function ProjectDetailPage() {
               {['largo', 'ancho', 'alto'].map((m) => (
                 <button 
                   key={m}
-                  onClick={() => setActiveNumpad(m as any)} 
+                  onClick={() => setActiveNumpad(m as 'largo' | 'ancho' | 'alto')} 
                   className="glacier-card p-4 flex flex-col items-center hover:bg-white/5 transition-colors"
                 >
                   <span className="text-[9px] text-surface-variant font-bold uppercase mb-1">{m}</span>
