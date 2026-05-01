@@ -97,4 +97,4 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 3. **Autenticación**: PIN de acceso para privacidad en obra
 
 ---
-*Desarrollado con ❤️ por Wilson Torrez & Antigravity AI*
+*Desarrollado con ❤️ por Wesly Alfred & Antigravity AI*
